@@ -54,7 +54,8 @@ public class SplashActivity extends BaseActivity {
 						}
 					}
 					String topActivityName = EasyUtils.getTopActivityName(EMClient.getInstance().getContext());
-					if (topActivityName != null && (topActivityName.equals(VideoCallActivity.class.getName()) || topActivityName.equals(VoiceCallActivity.class.getName()))) {
+					if (topActivityName != null && (topActivityName.equals(VideoCallActivity.class.getName())
+							|| topActivityName.equals(VoiceCallActivity.class.getName()))) {
 						// nop
 						// avoid main screen overlap Calling Activity
 					} else {
