@@ -11,7 +11,7 @@ import cn.ucai.superwechat.utils.OkHttpUtils;
 
 public class UserModel implements IUserModel {
     @Override
-    public void login(Context context, String userName, String password, OkHttpUtils.OnCompleteListener<String> listener) {
+    public void login(Context context, String userName, String password, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_LOGIN)
                 .addParam(I.User.USER_NAME, userName)
@@ -21,7 +21,7 @@ public class UserModel implements IUserModel {
     }
 
     @Override
-    public void register(Context context, String userName, String nick, String password, OkHttpUtils.OnCompleteListener<String> listener) {
+    public void register(Context context, String userName, String nick, String password, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_REGISTER)
                 .addParam(I.User.USER_NAME, userName)
@@ -33,7 +33,7 @@ public class UserModel implements IUserModel {
     }
 
     @Override
-    public void unRegister(Context context, String userName, OkHttpUtils.OnCompleteListener<String> listener) {
+    public void unRegister(Context context, String userName, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_UNREGISTER)
                 .addParam(I.User.USER_NAME,userName)

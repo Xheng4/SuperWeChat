@@ -2,8 +2,6 @@ package cn.ucai.superwechat.model.net;
 
 import android.content.Context;
 
-import cn.ucai.superwechat.utils.OkHttpUtils.OnCompleteListener;
-
 /**
  * Created by xheng on 2017/3/29.
  */
@@ -15,5 +13,6 @@ public interface IUserModel {
     void register(Context context, String userName, String nick, String password,
                   OnCompleteListener<String> listener);
 
-    void unRegister(Context context,String userName,OnCompleteListener<String> listener);
+    void unRegister(Context context,String userName,
+                    OnCompleteListener<String> listener);
 }

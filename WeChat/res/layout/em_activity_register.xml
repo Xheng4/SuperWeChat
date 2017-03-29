@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:background="#eff2f6"
     android:orientation="vertical" >
-
-    <RelativeLayout
+<!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1" >
@@ -15,14 +14,15 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:src="@drawable/em_welcom_logo" />
-    </RelativeLayout>
+    </RelativeLayout>-->
+    <!--<include android:id="@+id/title_register" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -49,6 +49,36 @@
                 android:layout_toLeftOf="@id/iv_username"
                 android:background="@null"
                 android:hint="@string/user_name"
+                android:paddingLeft="10dip"
+                android:singleLine="true"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#fff" >
+
+            <ImageView
+                android:id="@+id/iv_nick_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dip"
+                android:src="@drawable/em_icon_account" />
+
+            <EditText
+                android:id="@+id/register_nick"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/iv_nick_register"
+                android:background="@null"
+                android:hint="@string/nickname"
                 android:paddingLeft="10dip"
                 android:singleLine="true"
                 android:textSize="18sp" />
