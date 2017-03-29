@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.widget.MFGT;
+
 import com.hyphenate.util.EasyUtils;
 
 /**
@@ -60,16 +62,16 @@ public class SplashActivity extends BaseActivity {
 						// avoid main screen overlap Calling Activity
 					} else {
 						//enter main screen
-						startActivity(new Intent(SplashActivity.this, MainActivity.class));
+						MFGT.gotoMain(SplashActivity.this);
 					}
-					finish();
+					MFGT.finish(SplashActivity.this);
 				}else {
 					try {
 						Thread.sleep(sleepTime);
 					} catch (InterruptedException e) {
 					}
-					startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-					finish();
+					MFGT.gotoWelcome(SplashActivity.this);
+					MFGT.finish(SplashActivity.this);
 				}
 			}
 		}).start();
