@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
-import cn.ucai.superwechat.DemoModel;
+import cn.ucai.superwechat.SuperWeChatModel;
 import cn.ucai.superwechat.R;
 import com.hyphenate.easeui.widget.EaseTitleBar;
 
@@ -15,7 +15,7 @@ public class SetServersActivity extends BaseActivity {
     EditText imEdit;
     EaseTitleBar titleBar;
 
-    DemoModel demoModel;
+    SuperWeChatModel mSuperWeChatModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +26,11 @@ public class SetServersActivity extends BaseActivity {
         imEdit = (EditText) findViewById(R.id.et_im);
         titleBar = (EaseTitleBar) findViewById(R.id.title_bar);
 
-        demoModel = new DemoModel(this);
-        if(demoModel.getRestServer() != null)
-            restEdit.setText(demoModel.getRestServer());
-        if(demoModel.getIMServer() != null)
-            imEdit.setText(demoModel.getIMServer());
+        mSuperWeChatModel = new SuperWeChatModel(this);
+        if(mSuperWeChatModel.getRestServer() != null)
+            restEdit.setText(mSuperWeChatModel.getRestServer());
+        if(mSuperWeChatModel.getIMServer() != null)
+            imEdit.setText(mSuperWeChatModel.getIMServer());
         titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,9 +43,9 @@ public class SetServersActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if(!TextUtils.isEmpty(restEdit.getText()))
-            demoModel.setRestServer(restEdit.getText().toString());
+            mSuperWeChatModel.setRestServer(restEdit.getText().toString());
         if(!TextUtils.isEmpty(imEdit.getText()))
-            demoModel.setIMServer(imEdit.getText().toString());
+            mSuperWeChatModel.setIMServer(imEdit.getText().toString());
         super.onBackPressed();
     }
 }
