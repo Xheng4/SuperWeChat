@@ -3,38 +3,33 @@
     android:id="@+id/splash_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/em_splash" >
+    android:background="@drawable/new_splash" >
 
-    <ImageView
-        android:id="@+id/iv_splash_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/em_splash_logo" />
+<ImageView
+    android:id="@+id/iv_splash_logo"
+    android:src="@drawable/splash_logo_chat"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="55dp"
+    android:layout_width="90dp"
+    android:layout_height="90dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_splash_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dip"
-        android:text="@string/app_slogon"
-        android:textColor="#fff"
-        android:textSize="30sp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dip"
+        android:layout_marginBottom="26dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textColor="#fff"
+            android:textColor="@color/gray"
             android:textSize="20sp"
             android:typeface="normal" >
         </TextView>
@@ -45,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:text="2.1.7"
-            android:textColor="#fff"
+            android:textColor="@color/gray"
             android:textSize="20sp"
             tools:ignore="HardcodedText">
         </TextView>
