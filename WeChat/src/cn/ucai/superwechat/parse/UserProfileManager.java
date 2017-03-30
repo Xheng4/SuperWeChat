@@ -6,8 +6,15 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
+import cn.ucai.superwechat.model.bean.Result;
+import cn.ucai.superwechat.model.net.IUserModel;
+import cn.ucai.superwechat.model.net.OnCompleteListener;
+import cn.ucai.superwechat.model.net.UserModel;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
+
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +40,8 @@ public class UserProfileManager {
 	private boolean isSyncingContactInfosWithServer = false;
 
 	private EaseUser currentUser;
+	private User WechatcurrentUser;
+	IUserModel mModel;
 
 	public UserProfileManager() {
 	}
@@ -43,7 +52,9 @@ public class UserProfileManager {
 		}
 		ParseManager.getInstance().onInit(context);
 		syncContactInfosListeners = new ArrayList<DataSyncListener>();
+		mModel = new UserModel();
 		sdkInited = true;
+		appContext = context;
 		return true;
 	}
 
@@ -156,8 +167,28 @@ public class UserProfileManager {
 
 			}
 		});
-
 	}
+
+	public void asyncGetCurrentWechatUserInfo() {
+
+		mModel.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String result) {
+				if (result != null) {
+					Result json = ResultUtils.getResultFromJson(result, String.class);
+					if (json != null && json.isRetMsg()) {
+						User user = (User) json.getRetData();
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
+	}
+
 	public void asyncGetUserInfo(final String username,final EMValueCallBack<EaseUser> callback){
 		ParseManager.getInstance().asyncGetUserInfo(username, callback);
 	}

@@ -35,6 +35,8 @@ import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.db.SuperWeChatDBManager;
+import cn.ucai.superwechat.utils.MD5;
+
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 
 /**
@@ -148,7 +150,8 @@ public class LoginActivity extends BaseActivity {
 		final long start = System.currentTimeMillis();
 		// call login method
 		Log.d(TAG, "EMClient.getInstance().login");
-		EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+		Log.e("login", "login"+ MD5.getMessageDigest(currentPassword));
+		EMClient.getInstance().login(currentUsername, MD5.getMessageDigest(currentPassword), new EMCallBack() {
 
 			@Override
 			public void onSuccess() {
@@ -171,6 +174,7 @@ public class LoginActivity extends BaseActivity {
 				}
 				// get user's info (this should be get from App's server or 3rd party service)
 				SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+				SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentWechatUserInfo();
 
 				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
