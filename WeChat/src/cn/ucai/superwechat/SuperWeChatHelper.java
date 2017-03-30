@@ -152,6 +152,11 @@ public class SuperWeChatHelper {
 	public void init(Context context) {
 	    mSuperWeChatModel = new SuperWeChatModel(context);
 	    EMOptions options = initChatOptions();
+
+        //初始化Map
+        weChatContactList = new HashMap<>();
+
+
 	    //use default options if options is null
 		if (EaseUI.getInstance().init(context, options)) {
 		    appContext = context;
