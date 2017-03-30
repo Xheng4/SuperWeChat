@@ -195,6 +195,7 @@ public class PreferenceManager {
     }
 
 	public void setCurrentUserNick(String nick) {
+
 		editor.putString(SHARED_KEY_CURRENTUSER_NICK, nick);
 		editor.apply();
 	}

@@ -12,7 +12,7 @@ public class User implements Serializable {
 	private String mavatarSuffix;
 	private Integer mavatarType;
 	private String mavatarLastUpdateTime;
-
+	private String avatar;
 	/**
 	 * initial letter for nickname
 	 */
@@ -131,8 +131,12 @@ public class User implements Serializable {
 		this.initialLetter = initialLetter;
 	}
 
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
 	public String getAvatar() {
-		String path = "http://101.251.196.90:8000/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
+		String path = "http://101.251.196.90:8080/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
 		return path;
 	}
 }

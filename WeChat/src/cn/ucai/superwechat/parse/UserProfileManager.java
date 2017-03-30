@@ -10,6 +10,7 @@ import cn.ucai.superwechat.model.bean.Result;
 import cn.ucai.superwechat.model.net.IUserModel;
 import cn.ucai.superwechat.model.net.OnCompleteListener;
 import cn.ucai.superwechat.model.net.UserModel;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.ResultUtils;
 
@@ -40,7 +41,7 @@ public class UserProfileManager {
 	private boolean isSyncingContactInfosWithServer = false;
 
 	private EaseUser currentUser;
-	private User WechatcurrentUser;
+	private User mUser;
 	IUserModel mModel;
 
 	public UserProfileManager() {
@@ -135,6 +136,18 @@ public class UserProfileManager {
 		return currentUser;
 	}
 
+	public synchronized User getCurrentWeChatUserInfo() {
+		if (mUser == null) {
+			String username = EMClient.getInstance().getCurrentUser();
+			mUser = new User(username);
+			String nick = getCurrentUserNick();
+			mUser.setMUserNick((nick != null) ? nick : username);
+			mUser.setAvatar(getCurrentUserAvatar());
+		}
+		return mUser;
+	}
+
+
 	public boolean updateCurrentUserNickName(final String nickname) {
 		boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
 		if (isSuccess) {
@@ -169,22 +182,27 @@ public class UserProfileManager {
 		});
 	}
 
-	public void asyncGetCurrentWechatUserInfo() {
-
+	public void asyncGetCurrentWeChatUserInfo() {
+		L.e("asyncGetCurrentWeChatUserInfo");
 		mModel.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
 			@Override
 			public void onSuccess(String result) {
 				if (result != null) {
-					Result json = ResultUtils.getResultFromJson(result, String.class);
+					Result json = ResultUtils.getResultFromJson(result, User.class);
 					if (json != null && json.isRetMsg()) {
 						User user = (User) json.getRetData();
+						if (user != null) {
+							L.e("loadUserInfo");
+							setCurrentWeChatUserNick(user.getMUserNick());
+							setCurrentWeChatUserAvatar(user.getAvatar());
+						}
 					}
 				}
 			}
 
 			@Override
 			public void onError(String error) {
-
+				L.e(error);
 			}
 		});
 	}
@@ -197,10 +215,22 @@ public class UserProfileManager {
 		PreferenceManager.getInstance().setCurrentUserNick(nickname);
 	}
 
+
 	private void setCurrentUserAvatar(String avatar) {
 		getCurrentUserInfo().setAvatar(avatar);
 		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
 	}
+
+	private void setCurrentWeChatUserNick(String nickname) {
+		getCurrentWeChatUserInfo().setMUserNick(nickname);
+		PreferenceManager.getInstance().setCurrentUserNick(nickname);
+	}
+
+	private void setCurrentWeChatUserAvatar(String avatar) {
+		getCurrentWeChatUserInfo().setAvatar(avatar);
+		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+	}
+
 
 	private String getCurrentUserNick() {
 		return PreferenceManager.getInstance().getCurrentUserNick();
