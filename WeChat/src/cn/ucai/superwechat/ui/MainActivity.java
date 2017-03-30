@@ -29,6 +29,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -63,11 +65,12 @@ import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
 import cn.ucai.superwechat.ui.fragment.DicoverFragment;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
 
 @SuppressLint("NewApi")
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, DMTabHost.OnCheckedChangeListener {
 
     protected static final String TAG = "MainActivity";
     @BindView(R.id.txt_left)
@@ -145,11 +148,14 @@ public class MainActivity extends BaseActivity {
 //				.commit();
 
         mAdpter = new MainTabAdpter(getSupportFragmentManager());
-        mAdpter.addFragment(conversationListFragment,getString(R.string.app_name));
-        mAdpter.addFragment(contactListFragment,getString(R.string.contacts));
+        mAdpter.addFragment(conversationListFragment, getString(R.string.app_name));
+        mAdpter.addFragment(contactListFragment, getString(R.string.contacts));
         mAdpter.addFragment(new DicoverFragment(), getString(R.string.discover));
-        mAdpter.addFragment(settingFragment,getString(R.string.me));
+        mAdpter.addFragment(settingFragment, getString(R.string.me));
         mLayoutViewpage.setAdapter(mAdpter);
+        mLayoutViewpage.setOnPageChangeListener(this);
+        mLayoutTabhost.setOnCheckedChangeListener(this);
+        mLayoutTabhost.setChecked(0);
     }
 
     private void initUmengAPI() {
@@ -344,6 +350,39 @@ public class MainActivity extends BaseActivity {
         };
         broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
     }
+
+    /**
+     * 实现接口监听
+     *
+     * @param position
+     * @param positionOffset
+     * @param positionOffsetPixels
+     */
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//        L.e("main", "position:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
+        mLayoutTabhost.setChecked(position);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        L.e("main", "onPageSelected:" + position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        L.e("main", "onPageScrollStateChanged:" + state);
+    }
+
+    @Override
+    public void onCheckedChange(int checkedPosition, boolean byUser) {
+        L.e("main", "checkedPosition:" + checkedPosition + ",byUser:" + byUser);
+        if (byUser) {
+            mLayoutViewpage.setCurrentItem(checkedPosition);
+        }
+    }
+
 
     public class MyContactListener implements EMContactListener {
         @Override
