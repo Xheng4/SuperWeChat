@@ -195,6 +195,7 @@ public class UserProfileManager {
 							L.e("loadUserInfo");
 							setCurrentWeChatUserNick(user.getMUserNick());
 							setCurrentWeChatUserAvatar(user.getAvatar());
+							SuperWeChatHelper.getInstance().saveWeChatContact(user);
 						}
 					}
 				}

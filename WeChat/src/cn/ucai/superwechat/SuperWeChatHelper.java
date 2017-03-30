@@ -49,6 +49,7 @@ import com.hyphenate.easeui.controller.EaseUI.EaseUserProfileProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -85,6 +86,8 @@ public class SuperWeChatHelper {
     protected EMMessageListener messageListener = null;
 
 	private Map<String, EaseUser> contactList;
+
+	private Map<String, User> weChatContactList;
 
 	private Map<String, RobotUser> robotList;
 
@@ -1039,7 +1042,64 @@ public class SuperWeChatHelper {
          mSuperWeChatModel.saveContactList(mList);
     }
 
-	public UserProfileManager getUserProfileManager() {
+    /**
+     * weChatContactList
+     * update contact list
+     *
+     * @param aContactList
+     */
+    public void setWeChatContactList(Map<String, User> aContactList) {
+        if(aContactList == null){
+            if (weChatContactList != null) {
+                weChatContactList.clear();
+            }
+            return;
+        }
+
+        weChatContactList = aContactList;
+    }
+
+    /**
+     * save single contact
+     */
+    public void saveWeChatContact(User user){
+        weChatContactList.put(user.getMUserName(), user);
+        mSuperWeChatModel.saveWeChatContact(user);
+    }
+
+    /**
+     * get contact list
+     *
+     * @return
+     */
+    public Map<String, User> getWeChatContactList() {
+        if (isLoggedIn() && weChatContactList == null) {
+            weChatContactList = mSuperWeChatModel.getWeChatContactList();
+        }
+
+        // return a empty non-null object to avoid app crash
+        if(weChatContactList == null){
+            return new Hashtable<String, User>();
+        }
+
+        return weChatContactList;
+    }
+
+    /**
+     * update user list to cache and database
+     *
+     * @param contactInfoList
+     */
+    public void updateweChatContactList(List<User> contactInfoList) {
+        for (User u : contactInfoList) {
+            weChatContactList.put(u.getMUserName(), u);
+        }
+        ArrayList<User> mList = new ArrayList<User>();
+        mList.addAll(weChatContactList.values());
+        mSuperWeChatModel.saveWeCahtContactList(mList);
+    }
+
+    public UserProfileManager getUserProfileManager() {
 		if (userProManager == null) {
 			userProManager = new UserProfileManager();
 		}
