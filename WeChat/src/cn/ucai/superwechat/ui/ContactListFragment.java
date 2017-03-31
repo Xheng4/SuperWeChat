@@ -69,6 +69,7 @@ public class ContactListFragment extends EaseContactListFragment {
         headerView.findViewById(R.id.robot_item).setOnClickListener(clickListener);
         listView.addHeaderView(headerView);
         //add loading view
+        hideTitleBar();
         loadingView = LayoutInflater.from(getActivity()).inflate(R.layout.em_layout_loading_data, null);
         contentContainer.addView(loadingView);
 
@@ -103,7 +104,7 @@ public class ContactListFragment extends EaseContactListFragment {
             
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), AddContactActivity.class));
+                startActivity(new Intent(getActivity(), AddContactActivity.class));
                 NetUtils.hasDataConnection(getActivity());
             }
         });

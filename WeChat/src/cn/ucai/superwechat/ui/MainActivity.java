@@ -224,10 +224,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //		// select first tab
 //		mTabs[0].setSelected(true);
         mTitleBar = (EaseTitleBar) findViewById(R.id.ease_title_bar);
-
-
-
-
+        setTitleBar(0);
     }
 
     /**
@@ -370,28 +367,37 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        L.e("main", "position:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
-        switch (position) {
-            case 0:
-                mTitleBar.setRightImageResource(R.drawable.em_add);
-                mTitleBar.setTitle(getResources().getString(R.string.app_name));
-                break;
-            case 1:
-                mTitleBar.setRightImageResource(R.drawable.em_add);
-                mTitleBar.setTitle(getResources().getString(R.string.contacts));
-                break;
-            case 2:
-                mTitleBar.setTitle(getResources().getString(R.string.discover));
-                break;
-            case 3:
-                mTitleBar.setTitle(getResources().getString(R.string.me));
-                break;
-        }
+
     }
 
     @Override
     public void onPageSelected(int position) {
         L.e("main", "onPageSelected:" + position);
         mLayoutTabhost.setChecked(position);
+        setTitleBar(position);
+    }
+
+    private void setTitleBar(int position) {
+        switch (position) {
+            case 0:
+                mTitleBar.setRightImageResource(R.drawable.em_add);
+                mTitleBar.setRightLayoutVisibility(View.VISIBLE);
+                mTitleBar.setTitle(getResources().getString(R.string.app_name));
+                break;
+            case 1:
+                mTitleBar.setRightImageResource(R.drawable.em_add);
+                mTitleBar.setRightLayoutVisibility(View.VISIBLE);
+                mTitleBar.setTitle(getResources().getString(R.string.contacts));
+                break;
+            case 2:
+                mTitleBar.setRightLayoutVisibility(View.GONE);
+                mTitleBar.setTitle(getResources().getString(R.string.discover));
+                break;
+            case 3:
+                mTitleBar.setRightLayoutVisibility(View.GONE);
+                mTitleBar.setTitle(getResources().getString(R.string.me));
+                break;
+        }
     }
 
     @Override
