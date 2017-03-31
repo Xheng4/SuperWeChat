@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="9dp"
-            android:src="@drawable/em_login_error_icon" />
+            android:src="@drawable/em_login_error_icon"/>
 
         <TextView
             android:id="@+id/tv_connect_errormsg"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:text="@string/unable_to_connect"
-            android:textColor="#000" />
+            android:textColor="#000"/>
 
     </LinearLayout>
 

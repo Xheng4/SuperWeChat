@@ -272,7 +272,8 @@
         <activity
             android:name=".ui.SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/horizontal_slide"/>
+            android:theme="@style/horizontal_slide"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".ui.SetServersActivity"
             android:screenOrientation="portrait"

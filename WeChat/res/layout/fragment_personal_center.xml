@@ -7,6 +7,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/pc_profile_center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -16,7 +17,7 @@
             android:id="@+id/iv_avatar_pc"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_margin="16dp"
+            android:layout_margin="12dp"
             android:src="@mipmap/ic_launcher"/>
 
         <TextView
@@ -25,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:layout_toRightOf="@+id/iv_avatar_pc"
+            android:lines="1"
             android:text="nick"
             android:textColor="@color/black2"
             android:textSize="16sp"/>
@@ -36,6 +38,7 @@
             android:layout_below="@+id/tv_nick_pc"
             android:layout_marginTop="16dp"
             android:layout_toRightOf="@+id/iv_avatar_pc"
+            android:lines="1"
             android:text="username"/>
 
         <ImageView

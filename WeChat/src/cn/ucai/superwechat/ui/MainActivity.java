@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.widget.EaseTitleBar;
 import com.hyphenate.util.EMLog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
@@ -74,22 +76,22 @@ import cn.ucai.superwechat.widget.MFViewPager;
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, DMTabHost.OnCheckedChangeListener {
 
     protected static final String TAG = "MainActivity";
-    @BindView(R.id.txt_left)
-    TextView mTxtLeft;
+
     @BindView(R.id.layout_viewpage)
     MFViewPager mLayoutViewpage;
     @BindView(R.id.layout_tabhost)
     DMTabHost mLayoutTabhost;
+    EaseTitleBar mTitleBar;
 
 //	// textview for unread message count
 //	private TextView unreadLabel;
 //	// textview for unread event message
 //	private TextView unreadAddressLable;
 
-    private Button[] mTabs;
+//    private Button[] mTabs;
     private ContactListFragment contactListFragment;
     private Fragment[] fragments;
-    private int index;
+//    private int index;
     private int currentTabIndex;
     // user logged into another device
     public boolean isConflict = false;
@@ -221,6 +223,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //		mTabs[2] = (Button) findViewById(R.id.btn_setting);
 //		// select first tab
 //		mTabs[0].setSelected(true);
+        mTitleBar = (EaseTitleBar) findViewById(R.id.ease_title_bar);
+
+
+
+
     }
 
     /**
@@ -363,7 +370,22 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        L.e("main", "position:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
-
+        switch (position) {
+            case 0:
+                mTitleBar.setRightImageResource(R.drawable.em_add);
+                mTitleBar.setTitle(getResources().getString(R.string.app_name));
+                break;
+            case 1:
+                mTitleBar.setRightImageResource(R.drawable.em_add);
+                mTitleBar.setTitle(getResources().getString(R.string.contacts));
+                break;
+            case 2:
+                mTitleBar.setTitle(getResources().getString(R.string.discover));
+                break;
+            case 3:
+                mTitleBar.setTitle(getResources().getString(R.string.me));
+                break;
+        }
     }
 
     @Override
