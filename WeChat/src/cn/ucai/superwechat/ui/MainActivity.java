@@ -65,6 +65,7 @@ import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
 import cn.ucai.superwechat.ui.fragment.DicoverFragment;
+import cn.ucai.superwechat.ui.fragment.PersonalCenterFragment;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
@@ -140,8 +141,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private void initFragment() {
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+        PersonalCenterFragment personalCenterFragment = new PersonalCenterFragment();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, personalCenterFragment};
 
 //		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
 //				.add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
@@ -151,7 +152,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mAdpter.addFragment(conversationListFragment, getString(R.string.app_name));
         mAdpter.addFragment(contactListFragment, getString(R.string.contacts));
         mAdpter.addFragment(new DicoverFragment(), getString(R.string.discover));
-        mAdpter.addFragment(settingFragment, getString(R.string.me));
+        mAdpter.addFragment(personalCenterFragment, getString(R.string.me));
         mLayoutViewpage.setAdapter(mAdpter);
         mLayoutViewpage.setOnPageChangeListener(this);
         mLayoutTabhost.setOnCheckedChangeListener(this);
@@ -362,12 +363,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //        L.e("main", "position:" + position + ",positionOffset:" + positionOffset + ",positionOffsetPixels:" + positionOffsetPixels);
-        mLayoutTabhost.setChecked(position);
+
     }
 
     @Override
     public void onPageSelected(int position) {
         L.e("main", "onPageSelected:" + position);
+        mLayoutTabhost.setChecked(position);
     }
 
     @Override
@@ -378,9 +380,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
         L.e("main", "checkedPosition:" + checkedPosition + ",byUser:" + byUser);
-        if (byUser) {
-            mLayoutViewpage.setCurrentItem(checkedPosition);
-        }
+//        if (byUser) {
+//
+//        }
+        mLayoutViewpage.setCurrentItem(checkedPosition,byUser);
     }
 
 
