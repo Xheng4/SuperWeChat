@@ -137,7 +137,7 @@ public class UserProfileManager {
 	}
 
 	public synchronized User getCurrentWeChatUserInfo() {
-		if (mUser == null) {
+		if (mUser == null || mUser.getMUserName() == null) {
 			String username = EMClient.getInstance().getCurrentUser();
 			mUser = new User(username);
 			String nick = getCurrentUserNick();
