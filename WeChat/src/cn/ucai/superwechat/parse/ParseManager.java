@@ -38,7 +38,7 @@ public class ParseManager {
 	private static final String parseServer = "http://parse.easemob.com/parse/";
 
 	private static ParseManager instance = new ParseManager();
-	
+
 
 	private ParseManager() {
 	}
@@ -82,7 +82,7 @@ public class ParseManager {
 					e1.printStackTrace();
 					EMLog.e(TAG, "parse error " + e1.getMessage());
 				}
-				
+
 			}
 			e.printStackTrace();
 			EMLog.e(TAG, "parse error " + e.getMessage());

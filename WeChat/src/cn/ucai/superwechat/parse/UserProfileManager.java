@@ -1,11 +1,15 @@
 package cn.ucai.superwechat.parse;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatHelper.DataSyncListener;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.model.bean.Result;
 import cn.ucai.superwechat.model.net.IUserModel;
 import cn.ucai.superwechat.model.net.OnCompleteListener;
@@ -149,11 +153,33 @@ public class UserProfileManager {
 
 
 	public boolean updateCurrentUserNickName(final String nickname) {
-		boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
-		if (isSuccess) {
-			setCurrentUserNick(nickname);
-		}
-		return isSuccess;
+		mModel.upDateNick(appContext, EMClient.getInstance().getCurrentUser(), nickname,
+				new OnCompleteListener<String>() {
+					Boolean b = false;
+			@Override
+			public void onSuccess(String res) {
+
+				if (res != null) {
+					Result result = ResultUtils.getResultFromJson(res, User.class);
+					if (result != null && result.isRetMsg()) {
+						User user = (User) result.getRetData();
+						if (user != null) {
+							b = true;
+							setCurrentWeChatUserNick(user.getMUserNick());
+							SuperWeChatHelper.getInstance().saveWeChatContact(user);
+						}
+					}
+				}
+				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_USER_NICK).putExtra(I.User.NICK,b));
+			}
+
+			@Override
+			public void onError(String error) {
+				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_USER_NICK).putExtra(I.User.NICK,b));
+			}
+		});
+
+		return false;
 	}
 
 	public String uploadUserAvatar(byte[] data) {
@@ -164,23 +190,23 @@ public class UserProfileManager {
 		return avatarUrl;
 	}
 
-	public void asyncGetCurrentUserInfo() {
-		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
-
-			@Override
-			public void onSuccess(EaseUser value) {
-			    if(value != null){
-    				setCurrentUserNick(value.getNick());
-    				setCurrentUserAvatar(value.getAvatar());
-			    }
-			}
-
-			@Override
-			public void onError(int error, String errorMsg) {
-
-			}
-		});
-	}
+//	public void asyncGetCurrentUserInfo() {
+//		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
+//
+//			@Override
+//			public void onSuccess(EaseUser value) {
+//			    if(value != null){
+//    				setCurrentUserNick(value.getNick());
+//    				setCurrentUserAvatar(value.getAvatar());
+//			    }
+//			}
+//
+//			@Override
+//			public void onError(int error, String errorMsg) {
+//
+//			}
+//		});
+//	}
 
 	public void asyncGetCurrentWeChatUserInfo() {
 		L.e("asyncGetCurrentWeChatUserInfo");
