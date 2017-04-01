@@ -17,4 +17,6 @@ public interface IUserModel {
                     OnCompleteListener<String> listener);
 
     void loadUserInfo(Context context, String userName, OnCompleteListener<String> listener);
+
+    void upDateNick(Context context, String userName, String nick, OnCompleteListener<String> listener);
 }
