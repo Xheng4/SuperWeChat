@@ -1,6 +1,5 @@
 package cn.ucai.superwechat.ui;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +31,7 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 
-public class UserProfileActivity extends BaseActivity implements OnClickListener {
+public class UserProfileActivity extends BaseActivity {
 
     private static final int REQUESTCODE_PICK = 1;
     private static final int REQUESTCODE_CUTTING = 2;
@@ -80,13 +78,14 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
     private void initListener() {
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        String username = EMClient.getInstance().getCurrentUser();
+//        String username = intent.getStringExtra("username");
         boolean enableUpdate = intent.getBooleanExtra("setting", false);
         if (enableUpdate) {
             mUserHeadHeadphotoUpdate.setVisibility(View.VISIBLE);
 //            iconRightArrow.setVisibility(View.VISIBLE);
 //            rlNickName.setOnClickListener(this);
-            mUserHeadAvatar.setOnClickListener(this);
+//            mUserHeadAvatar.setOnClickListener(this);
         } else {
             mUserHeadHeadphotoUpdate.setVisibility(View.GONE);
 //            iconRightArrow.setVisibility(View.INVISIBLE);
@@ -303,10 +302,28 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         return baos.toByteArray();
     }
 
-    @OnClick({R.id.rl_nickname, R.id.rl_account, R.id.ic_right_arrow, R.id.rl_address, R.id.rl_sex, R.id.rl_area, R.id.rl_signature})
+    @OnClick({R.id.rl_nickname, R.id.rl_account, R.id.ic_right_arrow, R.id.rl_address,
+            R.id.rl_sex, R.id.rl_area, R.id.rl_signature,R.id.rl_avatar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_nickname:
+                View inflate = View.inflate(UserProfileActivity.this, R.layout.popup_update_nick, null);
+                final EditText editText = (EditText) findViewById(R.id.et_update_nick);
+                TextView textView = (TextView) findViewById(R.id.tv_update_title);
+                new Builder(this)
+                        .setCustomTitle(textView)
+                        .setView(inflate)
+                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String nickString = editText.getText().toString();
+                                if (TextUtils.isEmpty(nickString)) {
+                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                updateRemoteNick(nickString);
+                            }
+                        }).setNegativeButton(R.string.dl_cancel, null).show();
                 break;
             case R.id.rl_account:
                 break;
@@ -319,6 +336,9 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             case R.id.rl_area:
                 break;
             case R.id.rl_signature:
+                break;
+            case R.id.rl_avatar:
+                uploadHeadPhoto();
                 break;
         }
     }
