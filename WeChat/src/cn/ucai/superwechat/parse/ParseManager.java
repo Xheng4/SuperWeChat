@@ -5,6 +5,8 @@ import android.content.Context;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.L;
+
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
@@ -201,6 +203,7 @@ public class ParseManager {
 			ParseFile pFile = new ParseFile(data);
 			pUser.put(CONFIG_AVATAR, pFile);
 			pUser.save();
+			L.e("img","url:"+pFile.getUrl());
 			return pFile.getUrl();
 		} catch (ParseException e) {
 			if (e.getCode() == ParseException.OBJECT_NOT_FOUND) {

@@ -15,11 +15,12 @@ public interface IUserModel {
     void register(Context context, String userName, String nick, String password,
                   OnCompleteListener<String> listener);
 
-    void unRegister(Context context,String userName,
+    void unRegister(Context context, String userName,
                     OnCompleteListener<String> listener);
 
     void loadUserInfo(Context context, String userName, OnCompleteListener<String> listener);
 
     void upDateNick(Context context, String userName, String nick, OnCompleteListener<String> listener);
-    void upDateNick(Context context, String userName, File file, OnCompleteListener<String> listener);
+
+    void updateAvatar(Context context, String userName, File file, OnCompleteListener<String> listener);
 }

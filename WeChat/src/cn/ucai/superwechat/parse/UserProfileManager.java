@@ -21,6 +21,7 @@ import cn.ucai.superwechat.utils.ResultUtils;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,12 +183,40 @@ public class UserProfileManager {
 		return false;
 	}
 
-	public String uploadUserAvatar(byte[] data) {
-		String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
-		if (avatarUrl != null) {
-			setCurrentUserAvatar(avatarUrl);
-		}
-		return avatarUrl;
+	public boolean uploadUserAvatar(File file) {
+		final boolean[] success = {false};
+		L.e("avatar","uploadUserAvatar："+file);
+		mModel.updateAvatar(appContext, EMClient.getInstance().getCurrentUser(), file , new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String result) {
+				L.e("avatar","uploadUserAvatar-result："+result);
+				if (result != null) {
+					Result json = ResultUtils.getResultFromJson(result, String.class);
+					if (json != null && json.isRetMsg()) {
+						User user = (User) json.getRetData();
+						L.e("avatar","json.getRetData():"+user.toString());
+						if (user != null) {
+							setCurrentWeChatUserAvatar(user.getAvatar());
+							SuperWeChatHelper.getInstance().saveWeChatContact(user);
+							success[0] = true;
+
+						}
+					}
+				}
+//				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+//						.putExtra(I.Avatar.AVATAR_ID,success));
+			}
+
+			@Override
+			public void onError(String error) {
+				L.e("avatar","onError():"+error);
+				success[0] = false;
+//				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+//						.putExtra(I.Avatar.AVATAR_ID,success));
+			}
+		});
+
+		return success[0];
 	}
 
 //	public void asyncGetCurrentUserInfo() {
@@ -219,6 +248,8 @@ public class UserProfileManager {
 						User user = (User) json.getRetData();
 						if (user != null) {
 							L.e("loadUserInfo");
+							L.e("loadUserInfo","user:"+user.toString());
+							mUser = user;
 							setCurrentWeChatUserNick(user.getMUserNick());
 							setCurrentWeChatUserAvatar(user.getAvatar());
 							SuperWeChatHelper.getInstance().saveWeChatContact(user);
@@ -243,10 +274,10 @@ public class UserProfileManager {
 	}
 
 
-	private void setCurrentUserAvatar(String avatar) {
-		getCurrentUserInfo().setAvatar(avatar);
-		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
-	}
+//	private void setCurrentUserAvatar(String avatar) {
+//		getCurrentUserInfo().setAvatar(avatar);
+//		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
+//	}
 
 	private void setCurrentWeChatUserNick(String nickname) {
 		getCurrentWeChatUserInfo().setMUserNick(nickname);
@@ -254,6 +285,7 @@ public class UserProfileManager {
 	}
 
 	private void setCurrentWeChatUserAvatar(String avatar) {
+		L.e("loadUserInfo","avatar:"+avatar);
 		getCurrentWeChatUserInfo().setAvatar(avatar);
 		PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
 	}

@@ -12,8 +12,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,7 +29,12 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +42,7 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.L;
 
 public class UserProfileActivity extends BaseActivity {
 
@@ -54,14 +62,7 @@ public class UserProfileActivity extends BaseActivity {
     TextView mTvArea;
     @BindView(R.id.tv_signature)
     TextView mTvSignature;
-    //	private ImageView headAvatar;
-//	private ImageView headPhotoUpdate;
-//	private ImageView iconRightArrow;
-//	private TextView tvNickName;
-//	private TextView tvUsername;
     private ProgressDialog dialog;
-//	private RelativeLayout rlNickName;
-
 
     UpdateNickReceiver mReceiver;
 
@@ -97,12 +98,8 @@ public class UserProfileActivity extends BaseActivity {
         boolean enableUpdate = intent.getBooleanExtra("setting", false);
         if (enableUpdate) {
             mUserHeadHeadphotoUpdate.setVisibility(View.VISIBLE);
-//            iconRightArrow.setVisibility(View.VISIBLE);
-//            rlNickName.setOnClickListener(this);
-//            mUserHeadAvatar.setOnClickListener(this);
         } else {
             mUserHeadHeadphotoUpdate.setVisibility(View.GONE);
-//            iconRightArrow.setVisibility(View.INVISIBLE);
         }
         if (username != null) {
             if (username.equals(EMClient.getInstance().getCurrentUser())) {
@@ -117,34 +114,6 @@ public class UserProfileActivity extends BaseActivity {
             }
         }
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.user_head_avatar:
-//                uploadHeadPhoto();
-//                break;
-//            case R.id.rl_nickname:
-//                final EditText editText = new EditText(this);
-//                new Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
-//                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
-//
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                String nickString = editText.getText().toString();
-//                                if (TextUtils.isEmpty(nickString)) {
-//                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
-//                                    return;
-//                                }
-//                                updateRemoteNick(nickString);
-//                            }
-//                        }).setNegativeButton(R.string.dl_cancel, null).show();
-//                break;
-//            default:
-//                break;
-//        }
-//
-//    }
 
     public void asyncFetchUserInfo(String username) {
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {
@@ -175,9 +144,9 @@ public class UserProfileActivity extends BaseActivity {
     private void uploadHeadPhoto() {
         Builder builder = new Builder(this);
         builder.setTitle(R.string.dl_title_upload_photo);
-        builder.setItems(new String[]{getString(R.string.dl_msg_take_photo), getString(R.string.dl_msg_local_upload)},
+        builder.setItems(new String[]{getString(R.string.dl_msg_take_photo),
+                        getString(R.string.dl_msg_local_upload)},
                 new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         switch (which) {
@@ -189,6 +158,7 @@ public class UserProfileActivity extends BaseActivity {
                                 Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                                 pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                                 startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                                L.e("avatar","图片选则意图");
                                 break;
                             default:
                                 break;
@@ -227,10 +197,12 @@ public class UserProfileActivity extends BaseActivity {
                     return;
                 }
                 startPhotoZoom(data.getData());
+                L.e("avatar","图片裁剪");
                 break;
             case REQUESTCODE_CUTTING:
                 if (data != null) {
                     setPicToView(data);
+                    L.e("avatar","图片准备保存");
                 }
                 break;
             default:
@@ -238,6 +210,40 @@ public class UserProfileActivity extends BaseActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    //    private void savePhotoPath() {
+//        File file = new File();
+//        File fileDir = new File(Environment.getExternalStorageDirectory(), strFileDir);  //定义目录
+//        if (!fileDir.exists()) {   //判断目录是否存在
+//            Log.e("FileTool",fileDir.getPath());
+//            fileDir.mkdirs();      //如果不存在则先创建目录
+//        }
+//        strFileName = strFileName  + System.currentTimeMillis()+".jpg";
+//        File file = new File(fileDir, strFileName);   //定义文件
+//        if (!file.exists()) {  //判断文件是否存在
+//            Log.e("FileTools",file.toString());
+//            file.createNewFile();    //如果不存在则先创建文件
+//        }
+//
+//    }
+    public File getAvatarPath( String fielName) {
+        File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        dir = new File(dir, I.AVATAR_TYPE_USER_PATH);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File file = new File(dir, fielName);
+        L.e("avatar","file:"+file);
+        return file;
+    }
+
+    private String getAvatarName() {
+        User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentWeChatUserInfo();
+        String avatarName = user.getMUserName() + System.currentTimeMillis()+".png";
+        Log.e("avatar", "avatarName:" + avatarName);
+        return avatarName;
+    }
+
 
     public void startPhotoZoom(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -263,25 +269,59 @@ public class UserProfileActivity extends BaseActivity {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
             mUserHeadAvatar.setImageDrawable(drawable);
-            uploadUserAvatar(Bitmap2Bytes(photo));
+            L.e("avatar","获取到bitmap");
+            uploadUserAvatar(Bitmap2File(photo));
         }
 
     }
+//    /**
+//     * 保存文件
+//     * @param bm
+//     * @param fileName
+//     * @throws IOException
+//     */
+//    public void saveFile(Bitmap bm, String fileName) {
+//        String path = getSDPath() +"/revoeye/";
+//        File dirFile = new File(path);
+//        if(!dirFile.exists()){
+//            dirFile.mkdir();
+//        }
+//        File myCaptureFile = new File(path + fileName);
+//        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+//        bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+//
+//    }
 
-    private void uploadUserAvatar(final byte[] data) {
+    private File Bitmap2File(Bitmap bitmap) {
+        File file = null;
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getAvatarPath(getAvatarName())));
+            bitmap.compress(Bitmap.CompressFormat.PNG, 80, bos);
+            bos.flush();
+            bos.close();
+             file= getAvatarPath(getAvatarName());
+            L.e("avatar","Bitmap2File:"+file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    private void uploadUserAvatar(final File file) {
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
         new Thread(new Runnable() {
-
             @Override
             public void run() {
-                final String avatarUrl = SuperWeChatHelper.getInstance().getUserProfileManager().uploadUserAvatar(data);
+                final boolean success = SuperWeChatHelper.getInstance().getUserProfileManager().uploadUserAvatar(file);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         dialog.dismiss();
-                        if (avatarUrl != null) {
+                        if (success) {
                             Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
                                     Toast.LENGTH_SHORT).show();
+                            User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentWeChatUserInfo();
+                            EaseUserUtils.setWeChatUserAvatar(UserProfileActivity.this, user.getMUserName(), mUserHeadAvatar);
                         } else {
                             Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_fail),
                                     Toast.LENGTH_SHORT).show();
@@ -297,11 +337,11 @@ public class UserProfileActivity extends BaseActivity {
     }
 
 
-    public byte[] Bitmap2Bytes(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
-    }
+//    public byte[] Bitmap2Bytes(Bitmap bm) {
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//        return baos.toByteArray();
+//    }
 
     @OnClick({R.id.rl_nickname, R.id.rl_account, R.id.ic_right_arrow, R.id.rl_address,
             R.id.rl_sex, R.id.rl_area, R.id.rl_signature, R.id.rl_avatar})
@@ -341,6 +381,7 @@ public class UserProfileActivity extends BaseActivity {
                 break;
             case R.id.rl_avatar:
                 uploadHeadPhoto();
+                L.e("avatar","开始");
                 break;
         }
     }
