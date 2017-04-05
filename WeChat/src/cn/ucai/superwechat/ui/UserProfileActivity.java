@@ -65,6 +65,7 @@ public class UserProfileActivity extends BaseActivity {
     private ProgressDialog dialog;
 
     UpdateNickReceiver mReceiver;
+    UpdateAvatarReceiver mReceiverAvatar;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -78,8 +79,13 @@ public class UserProfileActivity extends BaseActivity {
 
     private void initListener() {
         mReceiver = new UpdateNickReceiver();
+        mReceiverAvatar = new UpdateAvatarReceiver();
+
         IntentFilter filter = new IntentFilter(I.REQUEST_UPDATE_USER_NICK);
+        IntentFilter filter1 = new IntentFilter(I.REQUEST_UPDATE_AVATAR);
+
         registerReceiver(mReceiver, filter);
+        registerReceiver(mReceiverAvatar, filter1);
     }
 
     private void initView() {
@@ -158,7 +164,7 @@ public class UserProfileActivity extends BaseActivity {
                                 Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                                 pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                                 startActivityForResult(pickIntent, REQUESTCODE_PICK);
-                                L.e("avatar","图片选则意图");
+                                L.e("avatar", "图片选则意图");
                                 break;
                             default:
                                 break;
@@ -197,12 +203,12 @@ public class UserProfileActivity extends BaseActivity {
                     return;
                 }
                 startPhotoZoom(data.getData());
-                L.e("avatar","图片裁剪");
+                L.e("avatar", "图片裁剪");
                 break;
             case REQUESTCODE_CUTTING:
                 if (data != null) {
                     setPicToView(data);
-                    L.e("avatar","图片准备保存");
+                    L.e("avatar", "图片准备保存");
                 }
                 break;
             default:
@@ -226,20 +232,20 @@ public class UserProfileActivity extends BaseActivity {
 //        }
 //
 //    }
-    public File getAvatarPath( String fielName) {
+    public File getAvatarPath(String fielName) {
         File dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         dir = new File(dir, I.AVATAR_TYPE_USER_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
         }
         File file = new File(dir, fielName);
-        L.e("avatar","file:"+file);
+        L.e("avatar", "file:" + file);
         return file;
     }
 
     private String getAvatarName() {
         User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentWeChatUserInfo();
-        String avatarName = user.getMUserName() + System.currentTimeMillis()+".png";
+        String avatarName = user.getMUserName() + System.currentTimeMillis() + ".png";
         Log.e("avatar", "avatarName:" + avatarName);
         return avatarName;
     }
@@ -269,7 +275,7 @@ public class UserProfileActivity extends BaseActivity {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
             mUserHeadAvatar.setImageDrawable(drawable);
-            L.e("avatar","获取到bitmap");
+            L.e("avatar", "获取到bitmap");
             uploadUserAvatar(Bitmap2File(photo));
         }
 
@@ -295,12 +301,12 @@ public class UserProfileActivity extends BaseActivity {
     private File Bitmap2File(Bitmap bitmap) {
         File file = null;
         try {
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(getAvatarPath(getAvatarName())));
+            file = getAvatarPath(getAvatarName());
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.PNG, 80, bos);
             bos.flush();
             bos.close();
-             file= getAvatarPath(getAvatarName());
-            L.e("avatar","Bitmap2File:"+file);
+            L.e("avatar", "Bitmap2File:" + file);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -312,28 +318,24 @@ public class UserProfileActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final boolean success = SuperWeChatHelper.getInstance().getUserProfileManager().uploadUserAvatar(file);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        if (success) {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
-                                    Toast.LENGTH_SHORT).show();
-                            User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentWeChatUserInfo();
-                            EaseUserUtils.setWeChatUserAvatar(UserProfileActivity.this, user.getMUserName(), mUserHeadAvatar);
-                        } else {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_fail),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-
+                SuperWeChatHelper.getInstance().getUserProfileManager().uploadUserAvatar(file);
             }
         }).start();
 
         dialog.show();
+    }
+
+    private void updateReAvatar(boolean success) {
+        dialog.dismiss();
+        if (success) {
+            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_success),
+                    Toast.LENGTH_SHORT).show();
+            User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentWeChatUserInfo();
+            EaseUserUtils.setWeChatUserAvatar(UserProfileActivity.this, user.getMUserName(), mUserHeadAvatar);
+        } else {
+            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatephoto_fail),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -381,17 +383,24 @@ public class UserProfileActivity extends BaseActivity {
                 break;
             case R.id.rl_avatar:
                 uploadHeadPhoto();
-                L.e("avatar","开始");
+                L.e("avatar", "开始");
                 break;
         }
     }
 
     class UpdateNickReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean booleanExtra = intent.getBooleanExtra(I.User.NICK, false);
             updateReNick(booleanExtra);
+        }
+    }
+
+    class UpdateAvatarReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean success = intent.getBooleanExtra(I.Avatar.AVATAR_ID, false);
+            updateReAvatar(success);
         }
     }
 

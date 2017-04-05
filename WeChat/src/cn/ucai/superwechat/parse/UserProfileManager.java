@@ -49,6 +49,8 @@ public class UserProfileManager {
 	private User mUser;
 	IUserModel mModel;
 
+	boolean success;
+
 	public UserProfileManager() {
 	}
 
@@ -183,40 +185,38 @@ public class UserProfileManager {
 		return false;
 	}
 
-	public boolean uploadUserAvatar(File file) {
-		final boolean[] success = {false};
+	public void uploadUserAvatar(File file) {
+		success = false;
 		L.e("avatar","uploadUserAvatar："+file);
-		mModel.updateAvatar(appContext, EMClient.getInstance().getCurrentUser(), file , new OnCompleteListener<String>() {
+		mModel.updateAvatar(appContext, EMClient.getInstance().getCurrentUser(), file, new OnCompleteListener<String>() {
 			@Override
 			public void onSuccess(String result) {
 				L.e("avatar","uploadUserAvatar-result："+result);
 				if (result != null) {
-					Result json = ResultUtils.getResultFromJson(result, String.class);
+					Result json = ResultUtils.getResultFromJson(result, User.class);
 					if (json != null && json.isRetMsg()) {
 						User user = (User) json.getRetData();
 						L.e("avatar","json.getRetData():"+user.toString());
 						if (user != null) {
 							setCurrentWeChatUserAvatar(user.getAvatar());
 							SuperWeChatHelper.getInstance().saveWeChatContact(user);
-							success[0] = true;
-
+							success = true;
 						}
 					}
 				}
-//				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
-//						.putExtra(I.Avatar.AVATAR_ID,success));
+				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+						.putExtra(I.Avatar.AVATAR_ID,success));
 			}
 
 			@Override
 			public void onError(String error) {
 				L.e("avatar","onError():"+error);
-				success[0] = false;
-//				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
-//						.putExtra(I.Avatar.AVATAR_ID,success));
+				success = false;
+				appContext.sendBroadcast(new Intent(I.REQUEST_UPDATE_AVATAR)
+						.putExtra(I.Avatar.AVATAR_ID,success));
 			}
 		});
 
-		return success[0];
 	}
 
 //	public void asyncGetCurrentUserInfo() {
