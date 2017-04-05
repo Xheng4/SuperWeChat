@@ -71,6 +71,9 @@ import cn.ucai.superwechat.ui.fragment.PersonalCenterFragment;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
+import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
+import cn.ucai.superwechat.widget.TitleMenu.TitlePopup;
+import cn.ucai.superwechat.widget.common.ViewHolder;
 
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, DMTabHost.OnCheckedChangeListener {
@@ -82,6 +85,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @BindView(R.id.layout_tabhost)
     DMTabHost mLayoutTabhost;
     EaseTitleBar mTitleBar;
+    TitlePopup popup;
 
 //	// textview for unread message count
 //	private TextView unreadLabel;
@@ -224,7 +228,24 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //		// select first tab
 //		mTabs[0].setSelected(true);
         mTitleBar = (EaseTitleBar) findViewById(R.id.ease_title_bar);
+        mTitleBar.setRightImageResource(R.drawable.em_add);
+        popup = new TitlePopup(MainActivity.this);
+        popup.addAction(new ActionItem(MainActivity.this,R.string.menu_groupchat,R.drawable.icon_menu_group));
+        popup.addAction(new ActionItem(MainActivity.this,R.string.menu_addfriend,R.drawable.icon_menu_addfriend));
+        popup.addAction(new ActionItem(MainActivity.this,R.string.menu_qrcode,R.drawable.icon_menu_sao));
+        popup.addAction(new ActionItem(MainActivity.this,R.string.menu_money,R.drawable.icon_menu_money));
+        setListener();
         setTitleBar(0);
+
+    }
+
+    private void setListener() {
+        mTitleBar.getRightLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.show(mTitleBar);
+            }
+        });
     }
 
     /**
@@ -380,12 +401,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private void setTitleBar(int position) {
         switch (position) {
             case 0:
-                mTitleBar.setRightImageResource(R.drawable.em_add);
                 mTitleBar.setRightLayoutVisibility(View.VISIBLE);
                 mTitleBar.setTitle(getResources().getString(R.string.app_name));
                 break;
             case 1:
-                mTitleBar.setRightImageResource(R.drawable.em_add);
                 mTitleBar.setRightLayoutVisibility(View.VISIBLE);
                 mTitleBar.setTitle(getResources().getString(R.string.contacts));
                 break;
