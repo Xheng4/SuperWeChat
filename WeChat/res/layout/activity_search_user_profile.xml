@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="cn.ucai.superwechat.ui.SearchUserProfileActivity">
+
+    <com.hyphenate.easeui.widget.EaseTitleBar
+        android:id="@+id/search_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:id="@+id/pc_profile_center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/search_avatar_user"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_margin="12dp"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/search_nick_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:layout_toRightOf="@+id/search_avatar_user"
+            android:lines="1"
+            android:text="nick"
+            android:textColor="@color/black2"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/search_account_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_nick_user"
+            android:layout_marginTop="14dp"
+            android:layout_toRightOf="@+id/search_avatar_user"
+            android:lines="1"
+            android:text="username"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/search_mark_ll"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="@string/userinfo_txt_note_mark"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/search_add_btn"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg_green"
+        android:text="@string/userinfo_btn_add_contact"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/search_send_btn"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg_green"
+        android:text="@string/userinfo_btn_send_msg"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/search_vedio_btn"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/btn_bg_green"
+        android:text="@string/userinfo_btn_send_video"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+</LinearLayout>

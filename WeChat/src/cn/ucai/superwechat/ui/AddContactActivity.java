@@ -13,7 +13,6 @@
  */
 package cn.ucai.superwechat.ui;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -32,6 +31,7 @@ import cn.ucai.superwechat.model.bean.Result;
 import cn.ucai.superwechat.model.net.IUserModel;
 import cn.ucai.superwechat.model.net.OnCompleteListener;
 import cn.ucai.superwechat.model.net.UserModel;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.ResultUtils;
 import cn.ucai.superwechat.widget.MFGT;
 
@@ -106,91 +106,42 @@ public class AddContactActivity extends BaseActivity {
         pDialog();
         mModel.loadUserInfo(AddContactActivity.this, name, new OnCompleteListener<String>() {
             boolean success = false;
+            User user;
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
                     Result json = ResultUtils.getResultFromJson(result, User.class);
                     if (json != null && json.isRetMsg()) {
-                        User user = (User) json.getRetData();
+                        user = (User) json.getRetData();
+                        L.e("add","json:"+user.toString());
                         if (user != null) {
 
                             success = true;
                         }
                     }
                 }
-                displayResult(success);
+                displayResult(success,user);
             }
 
             @Override
             public void onError(String error) {
-                displayResult(success);
+                displayResult(success, user);
             }
         });
     }
 
-    private void displayResult(boolean b) {
+    private void displayResult(boolean b, User user) {
         pd.dismiss();
         if (!b) {
             tvNoSearch.setText("你可能找了个假的用户...");
             tvNoSearch.setVisibility(View.VISIBLE);
         } else {
             tvNoSearch.setVisibility(View.GONE);
-
+            MFGT.gotoSearchUserProfile(AddContactActivity.this, user);
         }
     }
 
-    /**
-     *  add contact
-     * @param view
-     */
-    public void addContact(View view) {
-        if (EMClient.getInstance().getCurrentUser().equals(nameText.getText().toString())) {
-            new EaseAlertDialog(this, R.string.not_add_myself).show();
-            return;
-        }
 
-        if (SuperWeChatHelper.getInstance().getContactList().containsKey(nameText.getText().toString())) {
-            //let the user know the contact already in your contact list
-            if (EMClient.getInstance().contactManager().getBlackListUsernames().contains(nameText.getText().toString())) {
-                new EaseAlertDialog(this, R.string.user_already_in_contactlist).show();
-                return;
-            }
-            new EaseAlertDialog(this, R.string.This_user_is_already_your_friend).show();
-            return;
-        }
-
-        progressDialog = new ProgressDialog(this);
-        String stri = getResources().getString(R.string.Is_sending_a_request);
-        progressDialog.setMessage(stri);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-
-        new Thread(new Runnable() {
-            public void run() {
-
-                try {
-                    //demo use a hardcode reason here, you need let user to input if you like
-                    String s = getResources().getString(R.string.Add_a_friend);
-                    EMClient.getInstance().contactManager().addContact(toAddUsername, s);
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            String s1 = getResources().getString(R.string.send_successful);
-                            Toast.makeText(getApplicationContext(), s1, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            String s2 = getResources().getString(R.string.Request_add_buddy_failure);
-                            Toast.makeText(getApplicationContext(), s2 + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
 
     public void back(View v) {
         MFGT.finishZ(AddContactActivity.this);

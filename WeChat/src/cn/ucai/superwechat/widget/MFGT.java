@@ -3,6 +3,9 @@ package cn.ucai.superwechat.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+
+import com.hyphenate.easeui.domain.User;
 
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
@@ -10,6 +13,7 @@ import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
+import cn.ucai.superwechat.ui.SearchUserProfileActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
 import cn.ucai.superwechat.ui.UserProfileActivity;
 import cn.ucai.superwechat.ui.WelcomeActivity;
@@ -22,6 +26,10 @@ public class MFGT {
     public static void startActivity(Activity activity, Class cla) {
         activity.startActivity(new Intent(activity, cla));
         activity.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+public static void startActivityZ(Activity activity, Class cla) {
+        activity.startActivity(new Intent(activity, cla));
+        activity.overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
     }
 
     public static void startActivityForResult(Activity activity, Intent intent, int requestCode) {
@@ -36,6 +44,10 @@ public class MFGT {
 
     public static void finish(Activity activity) {
         activity.overridePendingTransition(R.anim.push_left_out, R.anim.push_left_in);
+        activity.finish();
+    }
+public static void finishZ(Activity activity) {
+        activity.overridePendingTransition(R.anim.zoom_in, R.anim.zoom_out);
         activity.finish();
     }
 
@@ -69,7 +81,11 @@ public class MFGT {
     }
 
     public static void gotoAddContactActivity(Activity activity) {
-        activity.startActivity(new Intent(activity,AddContactActivity.class));
+        startActivityZ(activity,AddContactActivity.class);
+    }
 
+    public static void gotoSearchUserProfile(Activity activity, User user) {
+        startActivity(activity,new Intent(activity, SearchUserProfileActivity.class).
+                putExtra("user",user));
     }
 }

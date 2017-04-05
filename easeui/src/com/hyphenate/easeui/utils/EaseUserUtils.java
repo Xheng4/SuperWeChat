@@ -84,9 +84,18 @@ public class EaseUserUtils {
      */
     public static void setWeChatUserAvatar(Context context, String username, ImageView imageView){
     	User user = getWeChatUserInfo(username);
-        Log.d("mingYue", "setWeChatUserAvatar: " + user.toString());
+       setWeChatUserAvatar(context,user,imageView);
+    }
+
+    /**
+     * WeChat
+     * set user avatar
+     *
+     * @param user
+     */
+    public static void setWeChatUserAvatar(Context context, User user, ImageView imageView) {
 //        Glide.with(context).load(user.getAvatar()).into(imageView);
-        if(user != null && user.getAvatar() != null){
+        if (user != null && user.getAvatar() != null) {
             try {
                 int avatarResId = Integer.parseInt(user.getAvatar());
                 Glide.with(context).load(avatarResId).into(imageView);
@@ -95,7 +104,7 @@ public class EaseUserUtils {
                 Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.drawable.ease_default_avatar).into(imageView);
             }
-        }else{
+        } else {
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
         }
     }
@@ -106,11 +115,20 @@ public class EaseUserUtils {
      */
     public static void setWeChatUserNick(String username,TextView textView){
         if(textView != null){
-        	EaseUser user = getUserInfo(username);
-        	if(user != null && user.getNick() != null){
-        		textView.setText(user.getNick());
+        	User user = getWeChatUserInfo(username);
+        	setWeChatUserNick(user,textView);
+        }
+    }
+ /**
+     * WeChat
+     * set user's nickname 0
+     */
+    public static void setWeChatUserNick(User user,TextView textView){
+        if(textView != null){
+        	if(user != null && user.getMUserNick() != null){
+        		textView.setText(user.getMUserNick());
         	}else{
-        		textView.setText(username);
+        		textView.setText(user.getMUserName());
         	}
         }
     }
