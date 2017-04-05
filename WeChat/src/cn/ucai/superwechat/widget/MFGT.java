@@ -10,6 +10,7 @@ import com.hyphenate.easeui.domain.User;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.AddContactActivity;
+import cn.ucai.superwechat.ui.AddFriendCheckActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
@@ -87,5 +88,10 @@ public static void finishZ(Activity activity) {
     public static void gotoSearchUserProfile(Activity activity, User user) {
         startActivity(activity,new Intent(activity, SearchUserProfileActivity.class).
                 putExtra("user",user));
+    }
+
+    public static void gotoAddFriendCheck(Activity activity, String name) {
+        startActivity(activity,new Intent(activity, AddFriendCheckActivity.class)
+        .putExtra(I.User.USER_NAME,name));
     }
 }
