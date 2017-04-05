@@ -13,6 +13,7 @@
  */
 package cn.ucai.superwechat.ui;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -43,8 +44,9 @@ public class AddContactActivity extends BaseActivity {
     private TextView nameText, mTextView, tvNoSearch;
     private Button searchBtn;
     private String toAddUsername;
-    private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog,pd;
     IUserModel mModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,11 @@ public class AddContactActivity extends BaseActivity {
         String strUserName = getResources().getString(R.string.user_name);
         editText.setHint(strUserName);
     }
-
+    private void pDialog() {
+        pd = new ProgressDialog(this);
+        pd.setMessage(getResources().getString(R.string.addcontact_search));
+        pd.show();
+    }
 
     /**
      * search contact
@@ -97,9 +103,9 @@ public class AddContactActivity extends BaseActivity {
     }
 
     private void searchUser(String name) {
+        pDialog();
         mModel.loadUserInfo(AddContactActivity.this, name, new OnCompleteListener<String>() {
             boolean success = false;
-
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
@@ -123,6 +129,7 @@ public class AddContactActivity extends BaseActivity {
     }
 
     private void displayResult(boolean b) {
+        pd.dismiss();
         if (!b) {
             tvNoSearch.setText("你可能找了个假的用户...");
             tvNoSearch.setVisibility(View.VISIBLE);
