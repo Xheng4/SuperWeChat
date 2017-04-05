@@ -70,6 +70,7 @@ import cn.ucai.superwechat.ui.fragment.DicoverFragment;
 import cn.ucai.superwechat.ui.fragment.PersonalCenterFragment;
 import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.widget.DMTabHost;
+import cn.ucai.superwechat.widget.MFGT;
 import cn.ucai.superwechat.widget.MFViewPager;
 import cn.ucai.superwechat.widget.TitleMenu.ActionItem;
 import cn.ucai.superwechat.widget.TitleMenu.TitlePopup;
@@ -125,6 +126,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         requestPermissions();
 
         initView();
+
+        setListener();
+
         initUmengAPI();
 
 
@@ -234,7 +238,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         popup.addAction(new ActionItem(MainActivity.this,R.string.menu_addfriend,R.drawable.icon_menu_addfriend));
         popup.addAction(new ActionItem(MainActivity.this,R.string.menu_qrcode,R.drawable.icon_menu_sao));
         popup.addAction(new ActionItem(MainActivity.this,R.string.menu_money,R.drawable.icon_menu_money));
-        setListener();
+
+
         setTitleBar(0);
 
     }
@@ -244,6 +249,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void onClick(View v) {
                 popup.show(mTitleBar);
+            }
+        });
+        popup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
+            @Override
+            public void onItemClick(ActionItem item, int position) {
+                switch (position) {
+                    case 1:
+                        MFGT.gotoAddContactActivity(MainActivity.this);
+                }
             }
         });
     }

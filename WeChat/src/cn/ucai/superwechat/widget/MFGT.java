@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
@@ -67,4 +68,8 @@ public class MFGT {
         startActivity(activity, SettingsActivity.class);
     }
 
+    public static void gotoAddContactActivity(Activity activity) {
+        activity.startActivity(new Intent(activity,AddContactActivity.class));
+
+    }
 }
