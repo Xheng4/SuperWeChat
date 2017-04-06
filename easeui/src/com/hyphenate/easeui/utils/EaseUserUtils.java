@@ -96,16 +96,20 @@ public class EaseUserUtils {
     public static void setWeChatUserAvatar(Context context, User user, ImageView imageView) {
 //        Glide.with(context).load(user.getAvatar()).into(imageView);
         if (user != null && user.getAvatar() != null) {
-            try {
-                int avatarResId = Integer.parseInt(user.getAvatar());
-                Glide.with(context).load(avatarResId).into(imageView);
-            } catch (Exception e) {
-                //use default avatar
-                Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.ease_default_avatar).into(imageView);
-            }
+            setWeChatAvatar(context,user.getAvatar(), imageView);
         } else {
             Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+        }
+    }
+
+    public static void setWeChatAvatar(Context context, String avatar, ImageView imageView) {
+        try {
+            int avatarResId = Integer.parseInt(avatar);
+            Glide.with(context).load(avatarResId).into(imageView);
+        } catch (Exception e) {
+            //use default avatar
+            Glide.with(context).load(avatar).diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.ease_default_avatar).into(imageView);
         }
     }
 

@@ -14,9 +14,11 @@
 package cn.ucai.superwechat.domain;
 
 public class InviteMessage {
-	private String from;
-	private long time;
-	private String reason;
+	private String from;//谁添加你
+	private long time;//什么时间添加的
+	private String reason;//添加原因
+	private String nick;
+	private String avatar;
 
 	private InviteMesageStatus status;
 	private String groupId;
@@ -93,7 +95,21 @@ public class InviteMessage {
 	    return groupInviter;	    
 	}
 
+	public String getNick() {
+		return nick == null?from:nick;
+	}
 
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
 	public enum InviteMesageStatus{
 	    
