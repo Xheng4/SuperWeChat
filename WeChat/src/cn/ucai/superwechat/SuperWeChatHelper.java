@@ -38,6 +38,7 @@ import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.model.bean.Result;
 import cn.ucai.superwechat.model.net.IUserModel;
 import cn.ucai.superwechat.model.net.OnCompleteListener;
+import cn.ucai.superwechat.model.net.UserModel;
 import cn.ucai.superwechat.parse.UserProfileManager;
 import cn.ucai.superwechat.receiver.CallReceiver;
 import cn.ucai.superwechat.ui.ChatActivity;
@@ -167,7 +168,7 @@ public class SuperWeChatHelper {
         //use default options if options is null
         if (EaseUI.getInstance().init(context, options)) {
             appContext = context;
-
+            mModel = new UserModel();
             //debug mode, you'd better set it to false, if you want release your App officially.
             EMClient.getInstance().setDebugMode(true);
             //get easeui instance
@@ -827,7 +828,7 @@ public class SuperWeChatHelper {
                     if (json != null && json.isRetMsg()) {
                         User user = (User) json.getRetData();
                         if (user != null) {
-                            L.e("friend","user:"+user.toString());
+                            L.e("friend", "user:" + user.toString());
                             msg.setNick(user.getMUserNick());
                             msg.setAvatar(user.getAvatar());
                         }
