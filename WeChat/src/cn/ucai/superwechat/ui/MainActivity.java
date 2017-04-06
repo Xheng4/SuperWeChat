@@ -409,6 +409,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public void onPageSelected(int position) {
         L.e("main", "onPageSelected:" + position);
         mLayoutTabhost.setChecked(position);
+        currentTabIndex = position;
         setTitleBar(position);
     }
 
@@ -441,10 +442,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
         L.e("main", "checkedPosition:" + checkedPosition + ",byUser:" + byUser);
-//        if (byUser) {
-//
-//        }
         mLayoutViewpage.setCurrentItem(checkedPosition,byUser);
+        currentTabIndex = checkedPosition;
     }
 
 
@@ -524,6 +523,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         runOnUiThread(new Runnable() {
             public void run() {
                 int count = getUnreadAddressCountTotal();
+                mLayoutTabhost.setHasNew(1,count>0);
 //                if (count > 0) {
 //                    unreadAddressLable.setVisibility(View.VISIBLE);
 //                } else {

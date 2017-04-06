@@ -89,6 +89,7 @@ public class ContactListFragment extends EaseContactListFragment {
             inviteMessgeDao = new InviteMessgeDao(getActivity());
         }
         if(inviteMessgeDao.getUnreadMessagesCount() > 0){
+//            applicationItem.setUnreadCount(inviteMessgeDao.getUnreadMessagesCount());
             applicationItem.showUnreadMsgView();
         }else{
             applicationItem.hideUnreadMsgView();
@@ -234,8 +235,7 @@ public class ContactListFragment extends EaseContactListFragment {
 
 	/**
 	 * delete contact
-	 * 
-	 * @param toDeleteUser
+	 *
 	 */
 	public void deleteContact(final EaseUser tobeDeleteUser) {
 		String st1 = getResources().getString(R.string.deleting);
