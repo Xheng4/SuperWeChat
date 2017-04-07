@@ -12,6 +12,7 @@ import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.AddFriendCheckActivity;
+import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.NewFriendsMsgActivity;
@@ -99,5 +100,10 @@ public static void finishZ(Activity activity) {
 
     public static void gotoNewFriendMsgActivity(Activity activity) {
         startActivity(activity,NewFriendsMsgActivity.class);
+    }
+
+    public static void gotoChat(Activity activity, String userName) {
+        startActivity(activity,new Intent(activity, ChatActivity.class)
+                .putExtra("userId",userName));
     }
 }

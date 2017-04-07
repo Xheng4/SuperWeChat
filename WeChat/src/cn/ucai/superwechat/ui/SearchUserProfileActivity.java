@@ -87,10 +87,13 @@ public class SearchUserProfileActivity extends BaseActivity {
 
 
 
-    @OnClick({R.id.search_mark_ll, R.id.search_add_btn})
+    @OnClick({R.id.search_mark_ll, R.id.search_add_btn,R.id.search_send_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_mark_ll:
+                break;
+            case R.id.search_send_btn:
+                MFGT.gotoChat(SearchUserProfileActivity.this,user.getMUserName());
                 break;
             case R.id.search_add_btn:
                 boolean isCheck = true;
