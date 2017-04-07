@@ -239,7 +239,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         popup.addAction(new ActionItem(MainActivity.this,R.string.menu_qrcode,R.drawable.icon_menu_sao));
         popup.addAction(new ActionItem(MainActivity.this,R.string.menu_money,R.drawable.icon_menu_money));
 
-
         setTitleBar(0);
 
     }
@@ -508,6 +507,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      */
     public void updateUnreadLabel() {
         int count = getUnreadMsgCountTotal();
+        mLayoutTabhost.setUnreadCount(0,count);
 //        if (count > 0) {
 //            unreadLabel.setText(String.valueOf(count));
 //            unreadLabel.setVisibility(View.VISIBLE);
