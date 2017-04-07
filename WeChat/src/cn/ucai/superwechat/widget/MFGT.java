@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
 import com.hyphenate.easeui.domain.User;
 
@@ -13,6 +14,7 @@ import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.AddFriendCheckActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
+import cn.ucai.superwechat.ui.NewFriendsMsgActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
 import cn.ucai.superwechat.ui.SearchUserProfileActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
@@ -93,5 +95,9 @@ public static void finishZ(Activity activity) {
     public static void gotoAddFriendCheck(Activity activity, String name) {
         startActivity(activity,new Intent(activity, AddFriendCheckActivity.class)
         .putExtra(I.User.USER_NAME,name));
+    }
+
+    public static void gotoNewFriendMsgActivity(Activity activity) {
+        startActivity(activity,NewFriendsMsgActivity.class);
     }
 }
