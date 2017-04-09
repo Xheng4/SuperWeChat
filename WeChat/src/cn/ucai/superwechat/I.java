@@ -59,6 +59,7 @@ public interface I {
         String UPDATE_TIME 							= 		"m_location_last_update_time";	//最后更新时间
     }
 
+    String IS_FROM_CHAT = "is_from_chat";
     //	String AVATAR_PATH 								= 		"E:/test/";
     String ISON8859_1 								= 		"iso8859-1";
     String UTF_8 									= 		"utf-8";

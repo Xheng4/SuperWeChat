@@ -143,6 +143,7 @@ public class SearchUserProfileActivity extends BaseActivity {
             case R.id.search_mark_ll:
                 break;
             case R.id.search_send_btn:
+                finish();
                 MFGT.gotoChat(SearchUserProfileActivity.this,user.getMUserName());
                 break;
             case R.id.search_add_btn:

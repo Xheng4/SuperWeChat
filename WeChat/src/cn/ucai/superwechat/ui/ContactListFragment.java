@@ -32,6 +32,7 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.ContextMenu;
@@ -123,11 +124,12 @@ public class ContactListFragment extends EaseContactListFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EaseUser user = (EaseUser)listView.getItemAtPosition(position);
+                User user = (User)listView.getItemAtPosition(position);
                 if (user != null) {
-                    String username = user.getUsername();
+                    String username = user.getMUserName();
                     // demo中直接进入聊天页面，实际一般是进入用户详情页
-                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+//                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra("userId", username));
+                    MFGT.gotoSearchUserProfile((Activity) getContext(),user);
                 }
             }
         });
