@@ -1,5 +1,6 @@
 package cn.ucai.superwechat.ui;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +16,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.domain.InviteMessage;
+import cn.ucai.superwechat.model.bean.Result;
+import cn.ucai.superwechat.model.net.IUserModel;
+import cn.ucai.superwechat.model.net.OnCompleteListener;
+import cn.ucai.superwechat.model.net.UserModel;
+import cn.ucai.superwechat.utils.ResultUtils;
 import cn.ucai.superwechat.widget.MFGT;
 
 public class SearchUserProfileActivity extends BaseActivity {
@@ -35,12 +42,17 @@ public class SearchUserProfileActivity extends BaseActivity {
 
     EaseTitleBar mTitleBar;
     User user;
+    InviteMessage msg;
+
+    IUserModel mModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user_profile);
         ButterKnife.bind(this);
+
+        mModel = new UserModel();
         initView();
         initData();
     }
@@ -61,7 +73,7 @@ public class SearchUserProfileActivity extends BaseActivity {
     private void initData() {
         user = (User) getIntent().getSerializableExtra("user");
         if (user == null) {
-            InviteMessage msg = (InviteMessage) getIntent().getSerializableExtra("msg");
+            msg = (InviteMessage) getIntent().getSerializableExtra("msg");
             if (msg != null) {
                 user = new User(msg.getFrom());
                 user.setMUserNick(msg.getNick());
@@ -86,6 +98,35 @@ public class SearchUserProfileActivity extends BaseActivity {
         EaseUserUtils.setWeChatUserNick(user, mSearchNickUser);
         EaseUserUtils.setWeChatUserAvatar(SearchUserProfileActivity.this, user, mSearchAvatarUser);
         showFirend(isFriend);
+        syncUserInfo();
+    }
+
+    private void syncUserInfo() {
+        mModel.loadUserInfo(SearchUserProfileActivity.this, user.getMUserName(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String result) {
+                if (result != null) {
+                    Result json = ResultUtils.getResultFromJson(result, User.class);
+                    if (json != null && json.isRetMsg()) {
+                        User u = (User) json.getRetData();
+                        if (u != null && msg != null) {
+                            ContentValues values = new ContentValues();
+                            values.put(InviteMessgeDao.COLUMN_NAME_NICK, u.getMUserNick());
+                            values.put(InviteMessgeDao.COLUMN_NAME_AVATAR, u.getAvatar());
+                            InviteMessgeDao dao = new InviteMessgeDao(SearchUserProfileActivity.this);
+                            dao.updateMessage(msg.getId(), values);
+                        } else {
+                            SuperWeChatHelper.getInstance().saveWeChatContact(u);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     private void showFirend(boolean isFriend) {

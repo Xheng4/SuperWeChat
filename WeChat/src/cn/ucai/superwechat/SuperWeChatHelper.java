@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.icu.lang.UScript;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -741,8 +742,36 @@ public class SuperWeChatHelper {
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
+            onWeChatContactAdd(username);
 
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+        }
+
+        private void onWeChatContactAdd(final String username) {
+            mModel.addContact(appContext, EMClient.getInstance().getCurrentUser(), username, new OnCompleteListener<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    if (result != null) {
+                        Result json = ResultUtils.getResultFromJson(result, User.class);
+                        if (json != null && json.isRetMsg()) {
+                            User user = (User) json.getRetData();
+                            if (user != null) {
+                                Map<String, User> list = getWeChatContactList();
+                                list.put(user.getMUserName(), user);
+                                if (!list.containsKey(username)) {
+                                    userDao.saveWeChatContact(user);
+                                }
+                                broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
         }
 
         @Override
