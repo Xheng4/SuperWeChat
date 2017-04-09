@@ -13,7 +13,9 @@
  */
 package cn.ucai.superwechat.domain;
 
-public class InviteMessage {
+import java.io.Serializable;
+
+public class InviteMessage implements Serializable{
 	private String from;//谁添加你
 	private long time;//什么时间添加的
 	private String reason;//添加原因

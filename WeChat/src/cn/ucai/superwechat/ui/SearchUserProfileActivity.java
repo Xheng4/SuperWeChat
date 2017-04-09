@@ -15,6 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.widget.MFGT;
 
 public class SearchUserProfileActivity extends BaseActivity {
@@ -60,7 +61,15 @@ public class SearchUserProfileActivity extends BaseActivity {
     private void initData() {
         user = (User) getIntent().getSerializableExtra("user");
         if (user == null) {
-            MFGT.finish(SearchUserProfileActivity.this);
+            InviteMessage msg = (InviteMessage) getIntent().getSerializableExtra("msg");
+            if (msg != null) {
+                user = new User(msg.getFrom());
+                user.setMUserNick(msg.getNick());
+                user.setAvatar(msg.getAvatar());
+                showInfo(user);
+            } else {
+                MFGT.finish(SearchUserProfileActivity.this);
+            }
         } else {
             showInfo(user);
         }

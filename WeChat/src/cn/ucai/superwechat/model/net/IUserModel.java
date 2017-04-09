@@ -23,4 +23,6 @@ public interface IUserModel {
     void upDateNick(Context context, String userName, String nick, OnCompleteListener<String> listener);
 
     void updateAvatar(Context context, String userName, File file, OnCompleteListener<String> listener);
+
+    void loadContactList(Context context, String userName, OnCompleteListener<String> listener);
 }
