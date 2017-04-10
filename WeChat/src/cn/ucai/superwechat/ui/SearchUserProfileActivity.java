@@ -1,12 +1,15 @@
 package cn.ucai.superwechat.ui;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseTitleBar;
@@ -137,7 +140,7 @@ public class SearchUserProfileActivity extends BaseActivity {
 
 
 
-    @OnClick({R.id.search_mark_ll, R.id.search_add_btn,R.id.search_send_btn})
+    @OnClick({R.id.search_mark_ll, R.id.search_add_btn,R.id.search_send_btn,R.id.search_vedio_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_mark_ll:
@@ -154,6 +157,23 @@ public class SearchUserProfileActivity extends BaseActivity {
                     //直接添加
                 }
                 break;
+            case R.id.search_vedio_btn:
+                startVideoCall();
+                break;
+        }
+    }
+
+    /**
+     * make a video call
+     */
+    protected void startVideoCall() {
+        if (!EMClient.getInstance().isConnected())
+            Toast.makeText(SearchUserProfileActivity.this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
+        else {
+            startActivity(new Intent(SearchUserProfileActivity.this, VideoCallActivity.class).putExtra("username", user.getMUserName())
+                    .putExtra("isComingCall", false));
+            // videoCallBtn.setEnabled(false);
+//            inputMenu.hideExtendMenuContainer();
         }
     }
 }
