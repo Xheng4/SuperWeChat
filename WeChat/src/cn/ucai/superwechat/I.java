@@ -60,6 +60,10 @@ public interface I {
     }
 
     String IS_FROM_CHAT = "is_from_chat";
+    int REQUEST_CODE_PICK_PIC = 10010;
+    int REQUEST_CODE_PICK_CONTACT = 10011;
+    int REQUEST_CODE_CUTTING = 10012;
+
     //	String AVATAR_PATH 								= 		"E:/test/";
     String ISON8859_1 								= 		"iso8859-1";
     String UTF_8 									= 		"utf-8";

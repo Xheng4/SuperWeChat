@@ -1180,7 +1180,7 @@ public class SuperWeChatHelper {
      *
      * @param contactInfoList
      */
-    public void updateweChatContactList(List<User> contactInfoList) {
+    public void updateWeChatContactList(List<User> contactInfoList) {
         for (User u : contactInfoList) {
             weChatContactList.put(u.getMUserName(), u);
         }
@@ -1321,6 +1321,7 @@ public class SuperWeChatHelper {
             return;
         }
 
+        asyncWeChatContactsFromServer();
         isSyncingContactsWithServer = true;
 
         new Thread() {
@@ -1388,6 +1389,51 @@ public class SuperWeChatHelper {
 
             }
         }.start();
+    }
+
+    private void asyncWeChatContactsFromServer() {
+        if (isLoggedIn()) {
+            mModel.loadContactList(appContext, SuperWeChatHelper.getInstance().getCurrentUsernName(), new OnCompleteListener<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    if (result != null) {
+                        Result json = ResultUtils.getResultFromJson(result, User.class);
+                        if (json != null && json.isRetMsg()) {
+                            User user = (User) json.getRetData();
+                            if (user != null) {
+                                List<String> usernames;
+                                try {
+                                    usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
+
+                                Map<String, User> userlist = new HashMap<String, User>();
+                                for (String username : usernames) {
+
+                                    EaseCommonUtils.setUserInitialLetter(user);
+                                    userlist.put(username, user);
+                                }
+                                // save the contact list to cache
+                                getWeChatContactList().clear();
+                                getWeChatContactList().putAll(userlist);
+                                // save the contact list to database
+                                UserDao dao = new UserDao(appContext);
+                                List<User> users = new ArrayList<User>(userlist.values());
+                                dao.saveWeChatContactList(users);
+
+                                } catch (HyphenateException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+//                    updateWeChatContactList();
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
+        }
     }
 
     public void notifyContactsSyncListener(boolean success) {

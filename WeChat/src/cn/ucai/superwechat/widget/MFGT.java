@@ -15,6 +15,7 @@ import cn.ucai.superwechat.domain.InviteMessage;
 import cn.ucai.superwechat.ui.AddContactActivity;
 import cn.ucai.superwechat.ui.AddFriendCheckActivity;
 import cn.ucai.superwechat.ui.ChatActivity;
+import cn.ucai.superwechat.ui.GroupsActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.NewFriendsMsgActivity;
@@ -124,5 +125,9 @@ public class MFGT {
     public static void gotoSearchUserProfile(Activity activity, String username) {
         startActivity((Activity)activity,new Intent(activity,SearchUserProfileActivity.class)
                 .putExtra(I.User.USER_NAME,username));
+    }
+
+    public static void gotoGroups(Activity activity) {
+        startActivity(activity, GroupsActivity.class);
     }
 }
