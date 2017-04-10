@@ -228,26 +228,26 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                 results.values = copyConversationList;
                 results.count = copyConversationList.size();
             } else {
-                String prefixString = prefix.toString();
+                String prefixString = prefix.toString().toLowerCase();
                 final int count = mOriginalValues.size();
                 final ArrayList<EMConversation> newValues = new ArrayList<EMConversation>();
 
                 for (int i = 0; i < count; i++) {
                     final EMConversation value = mOriginalValues.get(i);
-                    String username = value.conversationId();
-                    
+                    String username = value.conversationId().toLowerCase();
+                    String nick = "";
                     EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
                     if(group != null){
                         username = group.getGroupName();
                     }else{
                         User user = EaseUserUtils.getWeChatUserInfo(username);
                         // TODO: not support Nick anymore
-//                        if(user != null && user.getNick() != null)
-//                            username = user.getNick();
+                        if(user != null && user.getMUserNick() != null)
+                            username = user.getMUserNick();
                     }
 
                     // First match against the whole ,non-splitted value
-                    if (username.startsWith(prefixString)) {
+                    if (username.contains(prefixString) || nick.contains(prefixString)) {
                         newValues.add(value);
                     } else{
                           final String[] words = username.split(" ");
