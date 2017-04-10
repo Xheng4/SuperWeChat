@@ -185,12 +185,16 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         titleBar.setTitle(toChatUsername);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             // set title
-            if(EaseUserUtils.getWeChatUserInfo(toChatUsername) != null){
                 User user = EaseUserUtils.getWeChatUserInfo(toChatUsername);
                 if (user != null) {
-                    titleBar.setTitle(user.getMUserNick());
+                    if (user.getMUserNick() != null) {
+                        titleBar.setTitle(user.getMUserNick());
+                    } else {
+                        titleBar.setTitle(user.getMUserName());
+                    }
+                } else {
+                    titleBar.setTitle(toChatUsername);
                 }
-            }
             titleBar.setRightImageResource(R.drawable.ease_mm_title_remove);
         } else {
         	titleBar.setRightImageResource(R.drawable.ease_to_group_details_normal);

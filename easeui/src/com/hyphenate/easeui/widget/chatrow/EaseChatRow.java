@@ -116,10 +116,10 @@ public abstract class EaseChatRow extends LinearLayout {
         }
         //set nickname and avatar
         if(message.direct() == Direct.SEND){
-            EaseUserUtils.setUserAvatar(context, EMClient.getInstance().getCurrentUser(), userAvatarView);
+            EaseUserUtils.setWeChatUserAvatar(context, EMClient.getInstance().getCurrentUser(), userAvatarView);
         }else{
-            EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
-            EaseUserUtils.setUserNick(message.getFrom(), usernickView);
+            EaseUserUtils.setWeChatUserAvatar(context, message.getFrom(), userAvatarView);
+            EaseUserUtils.setWeChatUserNick(message.getFrom(), usernickView);
         }
         
         if(deliveredView != null){
