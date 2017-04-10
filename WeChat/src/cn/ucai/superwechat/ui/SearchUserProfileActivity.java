@@ -17,6 +17,7 @@ import com.hyphenate.easeui.widget.EaseTitleBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.db.InviteMessgeDao;
@@ -48,7 +49,7 @@ public class SearchUserProfileActivity extends BaseActivity {
     InviteMessage msg;
 
     IUserModel mModel;
-
+    boolean isFriend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,19 +82,30 @@ public class SearchUserProfileActivity extends BaseActivity {
                 user = new User(msg.getFrom());
                 user.setMUserNick(msg.getNick());
                 user.setAvatar(msg.getAvatar());
-                showInfo(user);
-            } else {
-                MFGT.finish(SearchUserProfileActivity.this);
+                showInfo();
+//                syncUserInfo();
+//            } else {
+//                MFGT.finish(SearchUserProfileActivity.this);
             }
+        }
+        if (user == null) {
+            String un = getIntent().getStringExtra(I.User.USER_NAME);
+            if (un != null) {
+                user = new User(un);
+            }
+        }
+        if (user == null) {
+            MFGT.finish(SearchUserProfileActivity.this);
         } else {
-            showInfo(user);
+            showInfo();
+            syncUserInfo();
         }
     }
 
-    private void showInfo(User user) {
-        boolean isFriend = SuperWeChatHelper.getInstance()
+    private void showInfo() {
+        isFriend = SuperWeChatHelper.getInstance()
                 .getWeChatContactList().containsKey(user.getMUserName());
-        if (isFriend) {
+        if (isFriend && user.getMUserNick() != null) {
             SuperWeChatHelper.getInstance().saveWeChatContact(user);
         }
         mSearchAccountUser.setText(user.getMUserName());
@@ -101,7 +113,6 @@ public class SearchUserProfileActivity extends BaseActivity {
         EaseUserUtils.setWeChatUserNick(user, mSearchNickUser);
         EaseUserUtils.setWeChatUserAvatar(SearchUserProfileActivity.this, user, mSearchAvatarUser);
         showFirend(isFriend);
-        syncUserInfo();
     }
 
     private void syncUserInfo() {
@@ -118,9 +129,11 @@ public class SearchUserProfileActivity extends BaseActivity {
                             values.put(InviteMessgeDao.COLUMN_NAME_AVATAR, u.getAvatar());
                             InviteMessgeDao dao = new InviteMessgeDao(SearchUserProfileActivity.this);
                             dao.updateMessage(msg.getId(), values);
-                        } else {
+                        } else if (isFriend){
                             SuperWeChatHelper.getInstance().saveWeChatContact(u);
                         }
+                        user = u;
+                        showInfo();
                     }
                 }
             }

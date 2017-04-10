@@ -120,4 +120,9 @@ public class MFGT {
         startActivity(activity,new Intent(activity,ChatActivity.class)
                 .putExtra(I.IS_FROM_CHAT,b));
     }
+
+    public static void gotoSearchUserProfile(Activity activity, String username) {
+        startActivity((Activity)activity,new Intent(activity,SearchUserProfileActivity.class)
+                .putExtra(I.User.USER_NAME,username));
+    }
 }
