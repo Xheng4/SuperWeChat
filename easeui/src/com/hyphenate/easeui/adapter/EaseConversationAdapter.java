@@ -243,7 +243,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                         User user = EaseUserUtils.getWeChatUserInfo(username);
                         // TODO: not support Nick anymore
                         if(user != null && user.getMUserNick() != null)
-                            username = user.getMUserNick();
+                            nick = user.getMUserNick().toLowerCase();
                     }
 
                     // First match against the whole ,non-splitted value

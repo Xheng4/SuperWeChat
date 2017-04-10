@@ -146,9 +146,15 @@ public class SearchUserProfileActivity extends BaseActivity {
     }
 
     private void showFirend(boolean isFriend) {
-        mSearchAddBtn.setVisibility(isFriend?View.GONE:View.VISIBLE);
-        mSearchVedioBtn.setVisibility(isFriend ? View.VISIBLE : View.GONE);
-        mSearchSendBtn.setVisibility(isFriend ? View.VISIBLE : View.GONE);
+        if (user.getMUserName().equals(EMClient.getInstance().getCurrentUser())) {
+            mSearchAddBtn.setVisibility(View.GONE);
+            mSearchVedioBtn.setVisibility(View.GONE);
+            mSearchSendBtn.setVisibility(View.GONE);
+        } else {
+            mSearchAddBtn.setVisibility(isFriend?View.GONE:View.VISIBLE);
+            mSearchVedioBtn.setVisibility(isFriend ? View.VISIBLE : View.GONE);
+            mSearchSendBtn.setVisibility(isFriend ? View.VISIBLE : View.GONE);
+        }
     }
 
 
