@@ -32,10 +32,13 @@ import com.hyphenate.chat.EMGroup;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.widget.MFGT;
+
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.widget.EaseSidebar;
+import com.hyphenate.easeui.widget.EaseTitleBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +51,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 	private PickContactAdapter contactAdapter;
 	/** members already in the group */
 	private List<String> existMembers;
+	private EaseTitleBar mTitleBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +73,11 @@ public class GroupPickContactsActivity extends BaseActivity {
 		// get contact list
 		final List<User> alluserList = new ArrayList<User>();
 		for (User user : SuperWeChatHelper.getInstance().getWeChatContactList().values()) {
-			if (!user.getMUserName().equals(Constant.NEW_FRIENDS_USERNAME) & !user.getMUserName()
-					.equals(Constant.GROUP_USERNAME) & !user.getMUserName().equals(Constant.CHAT_ROOM)
-					& !user.getMUserName().equals(Constant.CHAT_ROBOT))
+			if (!user.getMUserName().equals(Constant.NEW_FRIENDS_USERNAME) &
+					!user.getMUserName().equals(Constant.GROUP_USERNAME) &
+					!user.getMUserName().equals(Constant.CHAT_ROOM) &
+					!user.getMUserName().equals(Constant.CHAT_ROBOT) &
+					!user.getMUserName().equals(SuperWeChatHelper.getInstance().getCurrentUsernName()))
 				alluserList.add(user);
 		}
 		// sort the list
@@ -104,6 +110,19 @@ public class GroupPickContactsActivity extends BaseActivity {
 				CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
 				checkBox.toggle();
 
+			}
+		});
+		initTitle();
+	}
+
+	private void initTitle() {
+		mTitleBar = (EaseTitleBar) findViewById(R.id.ease_title_pick);
+		mTitleBar.setLeftImageResource(R.drawable.icon_back);
+		mTitleBar.setTitle(getResources().getString(R.string.select_contacts));
+		mTitleBar.getLeftLayout().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MFGT.finish(GroupPickContactsActivity.this);
 			}
 		});
 	}
@@ -189,10 +208,6 @@ public class GroupPickContactsActivity extends BaseActivity {
 
 			return view;
 		}
-	}
-
-	public void back(View view){
-		finish();
 	}
 	
 }
