@@ -38,4 +38,23 @@ public class GroupModel implements IGroupModel {
                 .targetClass(String.class)
                 .execute(listener);
     }
+
+    @Override
+    public void findGroupInfoByHxid(Context context, String hxid, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_FIND_GROUP_BY_HXID)
+                .addParam(I.Group.HX_ID, hxid)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void delMembers(Context context, String members, String groupId, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_GROUP_MEMBERS)
+                .addParam(I.Member.USER_NAME,members)
+                .addParam(I.Member.GROUP_ID,groupId)
+                .targetClass(String.class)
+                .execute(listener);
+    }
 }
