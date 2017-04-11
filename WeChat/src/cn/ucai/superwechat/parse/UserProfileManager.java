@@ -249,10 +249,7 @@ public class UserProfileManager {
 						if (user != null) {
 							L.e("loadUserInfo");
 							L.e("loadUserInfo","user:"+user.toString());
-							mUser = user;
-							setCurrentWeChatUserNick(user.getMUserNick());
-							setCurrentWeChatUserAvatar(user.getAvatar());
-							SuperWeChatHelper.getInstance().saveWeChatContact(user);
+							setWeChatUserInfo(user);
 						}
 					}
 				}
@@ -263,6 +260,13 @@ public class UserProfileManager {
 				L.e(error);
 			}
 		});
+	}
+
+	public void setWeChatUserInfo(User user) {
+		mUser = user;
+		setCurrentWeChatUserNick(user.getMUserNick());
+		setCurrentWeChatUserAvatar(user.getAvatar());
+		SuperWeChatHelper.getInstance().saveWeChatContact(user);
 	}
 
 	public void asyncGetUserInfo(final String username,final EMValueCallBack<EaseUser> callback){
