@@ -289,8 +289,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				if(!TextUtils.isEmpty(returnData)){
 					progressDialog.setMessage(st5);
 					progressDialog.show();
-
-					new Thread(new Runnable() {
+                    updateGroupName(returnData);
+                    new Thread(new Runnable() {
 						public void run() {
 							try {
 								EMClient.getInstance().groupManager().changeGroupName(groupId, returnData);
@@ -1240,6 +1240,24 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		    });
 		    updateGroup();
 	    }
+    }
+    private void updateGroupName(String returnData) {
+        mModel.updateGroupName(GroupDetailsActivity.this, returnData, groupId, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String result) {
+                if (result != null) {
+                    Result json = ResultUtils.getResultFromJson(result, Group.class);
+                    if (json != null && json.isRetMsg()) {
+                        Toast.makeText(GroupDetailsActivity.this, "修改群名称成功", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(GroupDetailsActivity.this, "修改群名称成功", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
