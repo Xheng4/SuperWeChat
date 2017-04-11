@@ -16,5 +16,7 @@ public interface IGroupModel {
 
     void findGroupInfoByHxid(Context context,String hxid,OnCompleteListener<String> listener);
 
-    void delMembers(Context context, String members, String groupId, OnCompleteListener<String> listener);
+    void delMember(Context context, String members, String groupId, OnCompleteListener<String> listener);
+
+    void updateGroupName(Context context, String newName, String groupId, OnCompleteListener<String> listener);
 }

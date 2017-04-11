@@ -49,11 +49,21 @@ public class GroupModel implements IGroupModel {
     }
 
     @Override
-    public void delMembers(Context context, String members, String groupId, OnCompleteListener<String> listener) {
+    public void delMember(Context context, String members, String groupId, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
-        utils.setRequestUrl(I.REQUEST_DELETE_GROUP_MEMBERS)
+        utils.setRequestUrl(I.REQUEST_DELETE_GROUP_MEMBER)
                 .addParam(I.Member.USER_NAME,members)
                 .addParam(I.Member.GROUP_ID,groupId)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void updateGroupName(Context context, String newName, String hxid, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME)
+                .addParam(I.Group.NAME,newName)
+                .addParam(I.Group.HX_ID,hxid)
                 .targetClass(String.class)
                 .execute(listener);
     }

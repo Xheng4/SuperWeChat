@@ -809,7 +809,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 
 	private void removeMember() {
 		if (isGid) {
-            mModel.delMembers(GroupDetailsActivity.this, operationUserId, gid, new OnCompleteListener<String>() {
+            mModel.delMember(GroupDetailsActivity.this, operationUserId, gid, new OnCompleteListener<String>() {
                 @Override
                 public void onSuccess(String result) {
                     if (result != null) {
