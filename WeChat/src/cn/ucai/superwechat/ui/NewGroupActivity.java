@@ -13,8 +13,10 @@
  */
 package cn.ucai.superwechat.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
@@ -56,6 +59,7 @@ import cn.ucai.superwechat.model.bean.Result;
 import cn.ucai.superwechat.model.net.GroupModel;
 import cn.ucai.superwechat.model.net.IGroupModel;
 import cn.ucai.superwechat.model.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.L;
 import cn.ucai.superwechat.utils.ResultUtils;
 import cn.ucai.superwechat.widget.MFGT;
 
@@ -76,7 +80,7 @@ public class NewGroupActivity extends BaseActivity {
 
     private String avatarName;
     private File mFile;
-
+    String[] members;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,7 +174,7 @@ public class NewGroupActivity extends BaseActivity {
             public void run() {
                 final String groupName = groupNameEditText.getText().toString().trim();
                 String desc = introductionEditText.getText().toString();
-                String[] members = data.getStringArrayExtra("newmembers");
+                members = data.getStringArrayExtra("newmembers");
                 try {
                     EMGroupOptions option = new EMGroupOptions();
                     option.maxUsers = 200;
@@ -214,6 +218,9 @@ public class NewGroupActivity extends BaseActivity {
                                 if (result != null && result.isRetMsg()) {
                                     Group group = (Group) result.getRetData();
                                     if (group != null) {
+                                        if (members.length > 0)
+                                            addMembers(group.getMGroupHxid(), getMembers(members));
+                                    } else {
                                         success = true;
                                     }
                                 }
@@ -254,7 +261,33 @@ public class NewGroupActivity extends BaseActivity {
 
     @OnClick(R.id.layout_group_icon)
     public void onClick() {
-
+        uploadHeadPhoto();
+    }
+    private void uploadHeadPhoto() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dl_title_upload_photo);
+        builder.setItems(new String[]{getString(R.string.dl_msg_take_photo),
+                        getString(R.string.dl_msg_local_upload)},
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        switch (which) {
+                            case 0:
+                                Toast.makeText(NewGroupActivity.this, getString(R.string.toast_no_support),
+                                        Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+                                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                                startActivityForResult(pickIntent, I.REQUEST_CODE_PICK_PIC);
+                                L.e("avatar", "图片选则意图");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+        builder.create().show();
     }
 
     public void startPhotoZoom(Uri uri) {
@@ -317,5 +350,34 @@ public class NewGroupActivity extends BaseActivity {
             folder.mkdir();
         }
         return folder.getAbsolutePath();
+    }
+
+    private String getMembers(String[] members) {
+        StringBuffer s = new StringBuffer();
+        for (String member : members) {
+            s.append(member).append(",");
+        }
+        return s.toString();
+    }
+
+    private void addMembers(String members,String hxid) {
+        mModel.addMembers(NewGroupActivity.this, members, hxid, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String result) {
+                boolean success = false;
+                if (result != null) {
+                    Result json = ResultUtils.getResultFromJson(result, Group.class);
+                    if (json != null && json.isRetMsg()) {
+                        success = true;
+                    }
+                }
+                createSucces(success);
+            }
+
+            @Override
+            public void onError(String error) {
+                createSucces(false);
+            }
+        });
     }
 }
