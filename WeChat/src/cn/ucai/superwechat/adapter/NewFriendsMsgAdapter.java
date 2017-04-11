@@ -16,6 +16,7 @@ package cn.ucai.superwechat.adapter;
 import java.util.List;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
 import cn.ucai.superwechat.R;
@@ -91,7 +92,8 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 		    
 			if(msg.getGroupId() != null){ // show group name
 				holder.groupContainer.setVisibility(View.VISIBLE);
-				holder.groupname.setText(msg.getGroupName());
+				holder.groupname.setText(msg.getNick());
+				EaseUserUtils.setGroupAvatar(getContext(), Group.getAvatar(msg.getGroupId()),holder.avator);
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
 			}
